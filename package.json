@@ -1,0 +1,24 @@
+{
+  "name": "skillbridge-ai",
+  "private": true,
+  "packageManager": "yarn@4.17.1",
+  "workspaces": [
+    "apps/*",
+    "packages/*"
+  ],
+  "scripts": {
+    "build:packages": "yarn workspace @skillbridge/shared build && yarn workspace @skillbridge/database build",
+    "dev": "yarn build:packages && concurrently -n api,web -c auto \"yarn workspace @skillbridge/api dev\" \"yarn workspace @skillbridge/web dev\"",
+    "build": "yarn workspaces foreach -A -t run build",
+    "typecheck": "yarn build:packages && yarn workspaces foreach -A -t run typecheck",
+    "test": "yarn build:packages && yarn workspaces foreach -A -t run test",
+    "db:generate": "yarn workspace @skillbridge/database db:generate",
+    "db:migrate": "yarn workspace @skillbridge/database db:migrate",
+    "db:seed": "yarn workspace @skillbridge/database db:seed",
+    "db:studio": "yarn workspace @skillbridge/database db:studio"
+  },
+  "devDependencies": {
+    "concurrently": "^9.2.1",
+    "typescript": "^5.9.3"
+  }
+}
