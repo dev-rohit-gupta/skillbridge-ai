@@ -17,4 +17,5 @@ export const env = z.object({
   ACCESS_TOKEN_MINUTES: z.coerce.number().int().positive().default(15),
   REFRESH_TOKEN_DAYS: z.coerce.number().int().positive().default(7),
   UPLOAD_DIR: z.string().default("./uploads"),
+  isServerless: z.refine(() => process.env.VERCEL === "1"),
 }).parse(process.env);

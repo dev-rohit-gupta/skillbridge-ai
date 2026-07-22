@@ -11,7 +11,11 @@ import { dashboardRouter } from "./modules/dashboard";
 import { referenceRouter } from "./modules/reference";
 import { jobDescriptionRouter } from "./modules/job-descriptions";
 import { resumeRouter } from "./modules/resumes";
-export const app = express();
+
+
+const app = express();
+
+
 app.disable("x-powered-by");
 app.use(helmet());
 app.use(cors({ origin: env.WEB_ORIGIN, credentials: true }));
@@ -73,6 +77,9 @@ app.use(
 );
 app.use(express.json({ limit: "1mb" }));
 app.use(cookieParser());
+
+
+
 app.get("/api/v1/health", (_req, res) =>
   res.json({ success: true, data: { status: "ok" } }),
 );
@@ -86,3 +93,7 @@ app.use("/api/v1", roadmapRouter);
 app.use("/api/v1/dashboard", dashboardRouter);
 app.use(notFound);
 app.use(errorHandler);
+
+
+// exporting the app instance 
+export default app;
