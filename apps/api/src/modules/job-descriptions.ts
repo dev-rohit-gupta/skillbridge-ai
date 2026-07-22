@@ -11,11 +11,11 @@ import {
   createJobDescriptionInputSchema,
   updateJobRequirementInputSchema,
 } from "@skillbridge/shared";
-import {db} from "../config/database";
-import {AppError} from "../lib/errors";
-import {authenticate} from "../middleware/auth";
-import {validateBody} from "../middleware/validate";
-import {DeterministicAiProvider} from "./ai/provider";
+import {db} from "../config/database.js";
+import {AppError} from "../lib/errors.js";
+import {authenticate} from "../middleware/auth.js";
+import {validateBody} from "../middleware/validate.js";
+import {DeterministicAiProvider} from "./ai/provider.js";
 
 const provider = new DeterministicAiProvider();
 export const jobDescriptionRouter = Router();

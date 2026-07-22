@@ -1,8 +1,8 @@
 import type { Server } from "node:http";
 
-import app from "./app";
-import { pool } from "./config/database";
-import { env } from "./config/env";
+import app from "./app.js";
+import { pool } from "./config/database.js";
+import { env } from "./config/env.js";
 
 let server: Server | undefined;
 

@@ -1,8 +1,8 @@
 import {asc, eq, ilike, or} from "drizzle-orm";
 import {Router} from "express";
 import {careerRoles, roleRequirements, roleRequirementSkills, skills} from "@skillbridge/database";
-import {db} from "../config/database";
-import {authenticate} from "../middleware/auth";
+import {db} from "../config/database.js";
+import {authenticate} from "../middleware/auth.js";
 export const referenceRouter = Router(); referenceRouter.use(authenticate);
 referenceRouter.get("/career-roles", async (_req, res, next) => {
   try {

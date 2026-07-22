@@ -1,6 +1,4 @@
 import { createDatabase } from "@skillbridge/database";
-import { env } from "./env";
+import { env } from "./env.js";
 
-export const { db, pool } = createDatabase(env.DATABASE_URL, {
-  serverless: env.isServerless,
-});
+export const { db, pool } = createDatabase(env.DATABASE_URL);

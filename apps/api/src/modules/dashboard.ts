@@ -1,8 +1,8 @@
 import {and, desc, eq, isNull, sql} from "drizzle-orm";
 import {Router} from "express";
 import {analyses, careerRoles, jobDescriptions, resumes, roadmaps, userProfiles} from "@skillbridge/database";
-import {db} from "../config/database";
-import {authenticate} from "../middleware/auth";
+import {db} from "../config/database.js";
+import {authenticate} from "../middleware/auth.js";
 
 export const dashboardRouter = Router();
 dashboardRouter.use(authenticate);

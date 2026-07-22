@@ -1,5 +1,5 @@
 import {describe, expect, it} from "vitest";
-import {createTokenPair, hashToken, verifyAccessToken, verifyRefreshToken} from "../src/lib/jwt";
+import {createTokenPair, hashToken, verifyAccessToken, verifyRefreshToken} from "../src/lib/jwt.js";
 
 describe("JWT token pair", () => {
   it("creates distinct verifiable access and refresh tokens", async () => {

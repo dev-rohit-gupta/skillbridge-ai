@@ -1,7 +1,7 @@
 import {createHash, randomUUID} from "node:crypto";
 import {jwtVerify, SignJWT} from "jose";
-import {env} from "../config/env";
-import {AppError} from "./errors";
+import {env} from "../config/env.js";
+import {AppError} from "./errors.js";
 const encoder = new TextEncoder();
 const accessSecret = encoder.encode(env.ACCESS_TOKEN_SECRET);
 const refreshSecret = encoder.encode(env.REFRESH_TOKEN_SECRET);

@@ -1,6 +1,6 @@
 import type {NextFunction, Request, Response} from "express";
-import {AppError} from "../lib/errors";
-import {verifyAccessToken} from "../lib/jwt";
+import {AppError} from "../lib/errors.js";
+import {verifyAccessToken} from "../lib/jwt.js";
 export async function authenticate(req: Request, _res: Response, next: NextFunction) {
   try {
     const header = req.header("authorization");

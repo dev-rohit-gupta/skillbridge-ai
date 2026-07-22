@@ -1,4 +1,4 @@
-import { env } from "../../config/env";
+import { env } from "../../config/env.js";
 
 const storageBaseUrl = `${env.SUPABASE_URL.replace(/\/$/, "")}/storage/v1`;
 

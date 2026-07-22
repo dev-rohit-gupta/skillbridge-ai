@@ -1,5 +1,5 @@
 import {describe, expect, it} from "vitest";
-import {scoreAnalysis} from "../src/modules/scoring";
+import {scoreAnalysis} from "../src/modules/scoring.js";
 describe("scoreAnalysis", () => {
   it("scores exact skills", () => {
     const result = scoreAnalysis({experienceLevel: "FRESHER", relations: [], candidateSkills: [{skillId: "react", evidenceFactorBp: 10000, evidenceSource: "PROJECT"}], requirements: [{id: "1", name: "React", importance: "CORE", weight: 3, acceptedSkillIds: ["react"]}]});

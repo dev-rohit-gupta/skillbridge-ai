@@ -3,14 +3,14 @@ import cors from "cors";
 import express from "express";
 import helmet from "helmet";
 import pinoHttp from "pino-http";
-import { env } from "./config/env";
-import { errorHandler, notFound } from "./middleware/error";
-import { analysisRouter, roadmapRouter } from "./modules/analyses";
-import { authRouter, profileRouter } from "./modules/auth";
-import { dashboardRouter } from "./modules/dashboard";
-import { referenceRouter } from "./modules/reference";
-import { jobDescriptionRouter } from "./modules/job-descriptions";
-import { resumeRouter } from "./modules/resumes";
+import { env } from "./config/env.js";
+import { errorHandler, notFound } from "./middleware/error.js";
+import { analysisRouter, roadmapRouter } from "./modules/analyses.js";
+import { authRouter, profileRouter } from "./modules/auth.js";
+import { dashboardRouter } from "./modules/dashboard.js";
+import { referenceRouter } from "./modules/reference.js";
+import { jobDescriptionRouter } from "./modules/job-descriptions.js";
+import { resumeRouter } from "./modules/resumes.js";
 
 
 const app = express();

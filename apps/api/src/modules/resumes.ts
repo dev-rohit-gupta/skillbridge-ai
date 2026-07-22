@@ -12,15 +12,15 @@ import {
   addResumeSkillInputSchema,
   createResumeUploadIntentInputSchema,
 } from "@skillbridge/shared";
-import { db } from "../config/database";
-import { AppError } from "../lib/errors";
+import { db } from "../config/database.js";
+import { AppError } from "../lib/errors.js";
 import {
   createSignedResumeUploadUrl,
   downloadResumeObject,
   removeResumeObject,
-} from "../lib/storage/supabase";
-import { authenticate } from "../middleware/auth";
-import { validateBody } from "../middleware/validate";
+} from "../lib/storage/supabase.js";
+import { authenticate } from "../middleware/auth.js";
+import { validateBody } from "../middleware/validate.js";
 
 export const resumeRouter = Router();
 resumeRouter.use(authenticate);

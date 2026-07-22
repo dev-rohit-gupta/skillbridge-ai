@@ -1,5 +1,5 @@
 import {describe, expect, it} from "vitest";
-import {DeterministicAiProvider} from "../src/modules/ai/provider";
+import {DeterministicAiProvider} from "../src/modules/ai/provider.js";
 
 describe("deterministic job requirement extraction", () => {
   it("extracts and classifies canonical skills", async () => {
