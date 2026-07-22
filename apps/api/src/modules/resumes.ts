@@ -314,15 +314,25 @@ resumeRouter.post(
       ].join("/");
 
       let signedUpload: { signedUrl: string };
-      try {
-        signedUpload = await createSignedResumeUploadUrl(storagePath);
-      } catch {
-        throw new AppError(
-          500,
-          "RESUME_UPLOAD_URL_FAILED",
-          "Could not prepare the resume upload.",
-        );
-      }
+     try {
+  signedUpload =
+    await createSignedResumeUploadUrl(
+      storagePath,
+    );
+} catch (error) {
+  console.error(
+    "Supabase signed upload URL creation failed:",
+    error instanceof Error
+      ? error.message
+      : error,
+  );
+
+  throw new AppError(
+    500,
+    "RESUME_UPLOAD_URL_FAILED",
+    "Could not prepare the resume upload.",
+  );
+}
 
       const created = await db.transaction(async (tx) => {
         await tx
