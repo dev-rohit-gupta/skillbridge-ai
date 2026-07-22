@@ -1,11 +1,27 @@
-const supabaseAnonKey = import.meta.env.VITE_SUPABASE_ANON_KEY as string | undefined;
+const rawSupabaseAnonKey =
+  import.meta.env.VITE_SUPABASE_ANON_KEY as
+    | string
+    | undefined;
 
-if (!supabaseAnonKey) {
-  throw new Error("VITE_SUPABASE_ANON_KEY is required for resume uploads.");
+if (
+  typeof rawSupabaseAnonKey !== "string" ||
+  rawSupabaseAnonKey.trim().length === 0
+) {
+  throw new Error(
+    "VITE_SUPABASE_ANON_KEY is required for resume uploads.",
+  );
 }
 
-export async function uploadResumeToSignedUrl(signedUrl: string, file: File) {
+// Explicit string assignment fixes the TypeScript union type.
+const supabaseAnonKey: string =
+  rawSupabaseAnonKey.trim();
+
+export async function uploadResumeToSignedUrl(
+  signedUrl: string,
+  file: File,
+): Promise<void> {
   const body = new FormData();
+
   body.append("cacheControl", "3600");
   body.append("", file);
 
@@ -21,6 +37,10 @@ export async function uploadResumeToSignedUrl(signedUrl: string, file: File) {
 
   if (!response.ok) {
     const message = await response.text();
-    throw new Error(message || `Resume upload failed (${response.status}).`);
+
+    throw new Error(
+      message ||
+        `Resume upload failed (${response.status}).`,
+    );
   }
 }
