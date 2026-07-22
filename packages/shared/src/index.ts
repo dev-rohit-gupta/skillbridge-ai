@@ -50,6 +50,16 @@ export const createAnalysisInputSchema = z.discriminatedUnion("type", [
   z.object({type: z.literal("CUSTOM_JOB"), resumeId: uuidSchema, jobDescriptionId: uuidSchema}).strict(),
 ]);
 
+export const createResumeUploadIntentInputSchema = z.object({
+  displayName: z.string().trim().min(1).max(180).optional(),
+  originalFilename: z.string().trim().min(1).max(255),
+  mimeType: z.enum([
+    "application/pdf",
+    "application/vnd.openxmlformats-officedocument.wordprocessingml.document",
+  ]),
+  fileSizeBytes: z.number().int().positive().max(5 * 1024 * 1024),
+}).strict();
+
 export const addResumeSkillInputSchema = z.object({
   skillId: uuidSchema,
   evidenceText: z.string().trim().min(2).max(1000),

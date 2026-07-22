@@ -1,28 +1,33 @@
 # SkillBridge AI
 
-A complete Yarn monorepo for an internship-ready career and skill-gap analysis platform. Students upload a resume, review extracted skills, compare it with a seeded career role or pasted job description, receive an explainable score, and generate a learning roadmap.
+A Yarn monorepo for an internship-ready career and skill-gap analysis platform. Students upload a resume, review extracted skills, compare it with a seeded career role or pasted job description, receive an explainable score, and generate a learning roadmap.
 
 ## Stack
 
 ### Web
-- React 19 + Vite + TypeScript
+
+- React 19, Vite and TypeScript
 - TanStack Query for server state
 - Zustand for the in-memory access token
-- React Hook Form + shared Zod contracts
-- Responsive custom CSS UI
+- React Hook Form and shared Zod contracts
+- Direct signed uploads to private Supabase Storage
 
 ### API
-- Express 5 + TypeScript
+
+- Express 5 and TypeScript
 - Zod request validation
 - Short-lived JWT access tokens
-- Rotating JWT refresh tokens in an HttpOnly cookie
+- Rotating refresh JWTs in an HttpOnly cookie
 - PDF and DOCX extraction
 - Deterministic taxonomy-based resume and job matching
+- Vercel serverless-compatible app export
 
-### Data
-- PostgreSQL 17
-- Drizzle ORM and committed SQL migration
-- Seeded skills, aliases, relationships, five career roles and weighted requirements
+### Data and storage
+
+- PostgreSQL through Drizzle ORM
+- Neon pooled connection support for serverless runtime
+- Neon direct connection support for migrations
+- Private Supabase Storage bucket for original resume files
 
 ## Workspace layout
 
@@ -37,10 +42,11 @@ packages/
 
 ## Included flows
 
-- Registration, login, refresh-token rotation, logout and `/auth/me`
+- Registration, login, access-token refresh, refresh-token rotation and logout
 - Student onboarding and target-role selection
 - Five seeded roles: Frontend, Backend, Full-Stack, Data Analyst and UI/UX
-- Resume upload with PDF/DOCX validation and 5 MB limit
+- Signed PDF/DOCX uploads with a 5 MB limit
+- Private Supabase object download and deletion from the API
 - Resume text extraction, canonical skill detection and evidence snippets
 - Manual skill addition/removal and revision confirmation
 - Pasted job-description extraction and editable requirement review
@@ -50,22 +56,25 @@ packages/
 - Learning-roadmap generation and progress updates
 - Dashboard summary
 
-The default `DeterministicAiProvider` works offline and implements a provider interface. A watsonx.ai or another hosted provider can later implement the same interface without changing the analysis domain.
-
 ## Requirements
 
 - Node.js 22
 - Corepack/Yarn 4
-- Docker Desktop or a reachable PostgreSQL database
+- Neon PostgreSQL project
+- Supabase project with a private `resumes` bucket
 
-## Start locally
+## Local setup
 
 ```bash
 corepack enable
 corepack prepare yarn@4.17.1 --activate
 yarn install
 cp .env.example .env
-docker compose up -d postgres
+```
+
+Fill the Neon and Supabase values in `.env`, then run:
+
+```bash
 yarn db:migrate
 yarn db:seed
 yarn dev
@@ -75,7 +84,6 @@ PowerShell:
 
 ```powershell
 Copy-Item .env.example .env
-docker compose up -d postgres
 yarn db:migrate
 yarn db:seed
 yarn dev
@@ -86,29 +94,36 @@ Open:
 - Web: `http://localhost:5173`
 - API health: `http://localhost:4000/api/v1/health`
 
+## Resume upload flow
+
+```text
+React requests an upload intent
+        -> Express creates a resume row and signed Supabase upload URL
+        -> Browser uploads the file directly to Supabase Storage
+        -> React confirms upload with Express
+        -> Express downloads and validates the private file
+        -> Express extracts text and skills
+        -> Structured data is saved in Neon
+```
+
+The original file never passes through the Vercel Function request body.
+
 ## Environment variables
 
-Copy `.env.example` and replace both JWT secrets before sharing a deployed environment.
+See `.env.example`. Important separation:
 
-```env
-DATABASE_URL=postgresql://skillbridge:skillbridge@localhost:5432/skillbridge
-PORT=4000
-WEB_ORIGIN=http://localhost:5173
-ACCESS_TOKEN_SECRET=replace-with-at-least-32-random-characters
-REFRESH_TOKEN_SECRET=replace-with-another-at-least-32-random-characters
-ACCESS_TOKEN_MINUTES=15
-REFRESH_TOKEN_DAYS=7
-UPLOAD_DIR=./uploads
-VITE_API_URL=/api/v1
-```
+- `SUPABASE_SERVICE_ROLE_KEY` is backend-only.
+- `VITE_SUPABASE_ANON_KEY` is used by the browser only for the signed upload request.
+- `DATABASE_URL` should be the Neon pooled URL.
+- `DATABASE_URL_DIRECT` should be the Neon direct URL used for migrations.
 
 ## Database commands
 
 ```bash
-yarn db:generate   # create a migration after changing schema
-yarn db:migrate    # apply committed migrations
-yarn db:seed       # seed taxonomy and role matrices
-yarn db:studio     # open Drizzle Studio
+yarn db:generate
+yarn db:migrate
+yarn db:seed
+yarn db:studio
 ```
 
 ## Quality checks
@@ -119,12 +134,14 @@ yarn test
 yarn build
 ```
 
-The API tests cover deterministic scoring and custom job-requirement extraction. The repository was verified with all three commands before packaging.
+## Deployment
+
+Read [`DEPLOYMENT.md`](./DEPLOYMENT.md) for the exact Vercel, Neon and Supabase setup. Before deploying the frontend, replace the backend placeholder in `apps/web/vercel.json`.
 
 ## Important implementation notes
 
 - Access JWTs live only in Zustand memory and expire after 15 minutes.
 - Refresh JWTs live in an HttpOnly cookie, rotate on every refresh, and are hashed in PostgreSQL.
-- Resume files are stored locally in development under `apps/api/uploads`; use private object storage in production.
+- Resume files are private objects in Supabase Storage; PostgreSQL stores only the object path and extracted data.
+- Resume processing is awaited by the upload-completion request instead of using an unreliable in-process background callback.
 - Scores are calculated by backend rules, never generated as arbitrary AI output.
-- Uploaded resume content and job descriptions are treated as untrusted text.

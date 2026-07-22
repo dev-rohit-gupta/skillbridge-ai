@@ -1,4 +1,44 @@
-import {useQuery} from "@tanstack/react-query";
-import {useCurrentUser} from "../hooks/auth";
-import {api} from "../lib/api";
-export function ProfilePage() {const user = useCurrentUser(); const profile = useQuery({queryKey: ["profile"], queryFn: async () => (await api.get<{data: Record<string, unknown>}>("/profile")).data.data}); return <div className="page"><header className="page-header"><div><span className="eyebrow">Account</span><h1>Profile</h1><p>Your student and career information.</p></div></header><section className="content-card profile-card"><div className="avatar">{user.data?.fullName.slice(0,2).toUpperCase()}</div><div><h2>{user.data?.fullName}</h2><p>{user.data?.email}</p></div><dl>{Object.entries(profile.data ?? {}).filter(([key]) => !["id","userId","createdAt","updatedAt"].includes(key)).map(([key,value]) => <div key={key}><dt>{key.replace(/([A-Z])/g," $1")}</dt><dd>{value == null ? "—" : String(value)}</dd></div>)}</dl></section></div>}
+import { useQuery } from "@tanstack/react-query";
+import { useCurrentUser } from "../hooks/auth";
+import { api } from "../lib/api";
+export function ProfilePage() {
+  const user = useCurrentUser();
+  const profile = useQuery({
+    queryKey: ["profile"],
+    queryFn: async () =>
+      (await api.get<{ data: Record<string, unknown> }>("/profile")).data.data,
+  });
+  return (
+    <div className="page">
+      <header className="page-header">
+        <div>
+          <span className="eyebrow">Account</span>
+          <h1>Profile</h1>
+          <p>Your student and career information.</p>
+        </div>
+      </header>
+      <section className="content-card profile-card">
+        <div className="avatar">
+          {user.data?.fullName.slice(0, 2).toUpperCase()}
+        </div>
+        <div>
+          <h2>{user.data?.fullName}</h2>
+          <p>{user.data?.email}</p>
+        </div>
+        <dl>
+          {Object.entries(profile.data ?? {})
+            .filter(
+              ([key]) =>
+                !["id", "userId", "createdAt", "updatedAt"].includes(key),
+            )
+            .map(([key, value]) => (
+              <div key={key}>
+                <dt>{key.replace(/([A-Z])/g, " $1")}</dt>
+                <dd>{value == null ? "—" : String(value)}</dd>
+              </div>
+            ))}
+        </dl>
+      </section>
+    </div>
+  );
+}

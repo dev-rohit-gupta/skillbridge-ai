@@ -6,3 +6,5 @@ dist/
 coverage/
 apps/api/uploads/
 .DS_Store
+
+.yarn/install-state.gz

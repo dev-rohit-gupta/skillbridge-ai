@@ -6,7 +6,9 @@ import { eq, inArray } from "drizzle-orm";
 import { createDatabase } from "./index";
 import {careerRoles, roleRequirements, roleRequirementSkills, skillAliases, skillRelations, skills} from "./schema";
 
-const {db, pool} = createDatabase(process.env.DATABASE_URL ?? "postgresql://skillbridge:skillbridge@localhost:5432/skillbridge");
+const databaseUrl = process.env.DATABASE_URL_DIRECT ?? process.env.DATABASE_URL;
+if (!databaseUrl) throw new Error("DATABASE_URL or DATABASE_URL_DIRECT is required.");
+const {db, pool} = createDatabase(databaseUrl);
 const skillSeed = [
   ["html", "HTML", "FRONTEND", ["html5", "semantic html"]], ["css", "CSS", "FRONTEND", ["css3"]],
   ["javascript", "JavaScript", "LANGUAGE", ["js", "ecmascript", "es6"]], ["typescript", "TypeScript", "LANGUAGE", ["ts"]],

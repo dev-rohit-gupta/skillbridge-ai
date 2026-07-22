@@ -24,6 +24,11 @@ jobs:
           --health-retries 10
     env:
       DATABASE_URL: postgresql://skillbridge:skillbridge@localhost:5432/skillbridge
+      WEB_ORIGIN: http://localhost:5173
+      SUPABASE_URL: https://example.supabase.co
+      SUPABASE_SERVICE_ROLE_KEY: ci-service-role-key
+      SUPABASE_RESUME_BUCKET: resumes
+      VITE_SUPABASE_ANON_KEY: ci-anon-key
       ACCESS_TOKEN_SECRET: ci-access-secret-with-at-least-thirty-two-characters
       REFRESH_TOKEN_SECRET: ci-refresh-secret-with-at-least-thirty-two-characters
     steps:
