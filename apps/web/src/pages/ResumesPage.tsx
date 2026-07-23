@@ -5,6 +5,7 @@ import { Link } from "react-router-dom";
 import { api, errorMessage } from "../lib/api";
 import { queryClient } from "../lib/query-client";
 import { uploadResumeToSignedUrl } from "../lib/supabase";
+import { cn } from "../lib/utils";
 
 type Resume = {
   id: string;
@@ -96,9 +97,11 @@ export function ResumesPage() {
       </header>
 
       <section className="upload-card">
-        <FileUp size={28} />
-        <div>
-          <h2>Upload a resume</h2>
+        <div className="space-y-2">
+          <span className="flex justify-start items-center gap-2">
+            <FileUp size={32} />
+            <h2 className="font-semibold text-lg">Upload a resume</h2>
+          </span>
           <p>
             The file uploads directly to private storage, then the API extracts text,
             detects skills and shows the evidence before analysis.
@@ -115,13 +118,13 @@ export function ResumesPage() {
           onClick={() => upload.mutate()}
           disabled={upload.isPending}
         >
-          {upload.isPending ? "Uploading and processing…" : "Upload"}
+          {upload.isPending ? "processing…" : "Upload"}
         </button>
-        {upload.error && <div className="error-box">{errorMessage(upload.error)}</div>}
       </section>
+        {upload.error && <div className="error-box">{errorMessage(upload.error)}</div>}
 
       <section className="content-card">
-        <div className="section-heading">
+        <div className="section-heading mb-4 flex justify-between items-center">
           <h2>Uploaded resumes</h2>
           {resumes.isFetching && <RefreshCw className="spin" size={18} />}
         </div>
@@ -129,12 +132,11 @@ export function ResumesPage() {
           {resumes.data?.map((resume) => (
             <Link to={`/app/resumes/${resume.id}`} className="resume-card" key={resume.id}>
               <div>
-                <span className={`status ${resume.status.toLowerCase()}`}>{resume.status}</span>
+                <span className={cn("status", resume.status.toLowerCase())}>{resume.status}</span>
                 {resume.isActive && <span className="status active-status">ACTIVE</span>}
               </div>
-              <h3>{resume.displayName}</h3>
-              <p>{resume.originalFilename}</p>
-              <small>
+              <h3 className="mb-4">{resume.displayName}</h3>
+              <small className="text-sm px-2 py-1 rounded-xl text-amber-500 bg-amber-100">
                 {resume.contentRevision > 0 &&
                 resume.contentRevision === resume.confirmedRevision
                   ? "Confirmed for analysis"
